@@ -4,17 +4,26 @@ JVM Scala and Java protobuf bindings to Bitub.Dto.
 
 ## Build using sbt 
 
-`sbt clean publishLocal`
+`sbt clean publishLocal publishM2`
 
 ## Use
 
 Scala & sbt
 ```
+dependencies += "bitub" %% "bitub-dto" % "1.0-SNAPSHOT"
+```
+Gradle
+```
+compile group:'bitub', name: 'bitub-dto_2.13', version: '1.0-SNAPSHOT'
 ```
 
 Maven
 ```
-
+<dependency>
+    <groupId>bitub</groupId>
+    <artifactId>bitub-dto</artifactId>
+    <version>1.0-SNAPSHOT</version>
+</dependency>
 ```
 
 ## License
