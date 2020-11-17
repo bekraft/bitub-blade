@@ -5,7 +5,8 @@ import "common.proto";
 import "google/protobuf/timestamp.proto";
 
 // Version 1.2
-option csharp_namespace = "Bitub.Dto.Classify";
+// Unified version of TRex and Classify
+option csharp_namespace = "Bitub.Dto.Concept";
 option java_package = "bitub.dto";
 
 message Ontology {
@@ -23,17 +24,17 @@ message DomainConcept {
 // A concept template based on features
 message FeatureConcept {
 	Qualifier canonical = 1;
-	RoleOp op = 2;
+	ConceptOp op = 2;
 	repeated Feature features = 3;
 }
 
-// The feature role operator
-enum RoleOp {
+// The concept quantification operator
+enum ConceptOp {
 	AllOf = 0; // conjunction
 	OneOf = 1; // existential
 }
 
-// A data or role feature
+// A feature is either data concept or role filler reference
 message Feature {
 	oneof dataOrFiller {
 		DataConcept data = 3;
@@ -51,11 +52,12 @@ message DataConcept {
 		double digit = 5;
 		string value = 7;
 		google.protobuf.Timestamp timeStamp = 8;
-		bool flag = 9;
+		Logical logical = 9;
+		GlobalUniqueId guid = 10;
 	}
 }
 
-// The feature data type
+// The semantic data type
 enum DataType {
 	UNDEFINED = 0;
 	LABEL = 1;
@@ -66,7 +68,8 @@ enum DataType {
 	TEXT = 6;
 	ENUM = 7;
 	BOOLEAN = 8;
-	TIMESTAMP = 9;
+	LOGICAL = 9;
+	TIMESTAMP = 10;
 }
 
 // SI Unit
