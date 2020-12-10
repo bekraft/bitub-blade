@@ -4,21 +4,30 @@ package Bitub.Dto.Concept;
 import "common.proto";
 import "google/protobuf/timestamp.proto";
 
-// Version 1.2
+// Version 1.2.1
 // Unified version of TRex and Classify
 option csharp_namespace = "Bitub.Dto.Concept";
 option java_package = "bitub.dto";
 
+// An ontology / classification
 message Ontology {
 	repeated Classifier classifiers = 1;
 }
 
+// A domain space
+message Domain {
+	Qualifier canonical = 1;
+	string name = 2;
+	string description = 3;
+	repeated Concept concepts = 4;
+}
+
 // A domain concept
-message DomainConcept {
+message Concept {
 	Qualifier canonical = 1;
 	string description = 2;
-	repeated Qualifier subsumes = 3;
-	repeated string tags = 4;
+	repeated Qualifier subsumes = 3; // Opposite of "abstracts"
+	repeated string tags = 4; // Tagging
 }
 
 // A concept template based on features

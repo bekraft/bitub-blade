@@ -7,7 +7,8 @@ scalaVersion := "2.13.1"
 scalacOptions ++= Seq(
     "-feature",
     "-deprecation",
-    "-Xfatal-warnings"
+    "-Xfatal-warnings",
+    "-language:implicitConversions"
 )
 
 libraryDependencies ++= Seq(
