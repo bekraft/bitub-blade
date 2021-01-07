@@ -11,7 +11,6 @@ object Qualifiers {
 
 	object implicits {
 		import scala.language.implicitConversions
-		implicit def newAnonymous(): Qualifier = Qualifiers.newAnonymous()
 		implicit def newAnonymous(uuid: UUID): Qualifier = Qualifiers.newAnonymous(uuid)
 		implicit def newAnonymousBase64(base64: String): Qualifier = Qualifiers.newAnonymousBase64(base64)
 	}

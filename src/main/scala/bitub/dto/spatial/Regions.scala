@@ -1,6 +1,8 @@
 package bitub.dto.spatial
 
-import bitub.dto.spatial.BoundingBox.OBoxOrABox
+import bitub.dto.spatial.XYZs._
+
+import scala.util.{Failure, Success, Try}
 
 object Regions {
 
@@ -20,14 +22,47 @@ object Regions {
 		ABox(Some(min), Some(max))
 	}
 
-	def union(b1: OBox, b2: OBox): ABox = ???
+	def union(b1: OBox, b2: OBox): OBox = ???
 
-	def union(b1: BoundingBox, b2: BoundingBox): BoundingBox = ???
-
-	def union(r1: Region, r2: Region, f: (String, String) => String = (s1, s2) => s1.concat(s2)): Region = {
-		val boundingBox = r1.boundingBox.zip(r2.boundingBox).map {
-			case (b1:BoundingBox, b2:BoundingBox) => union(b1, b2)
-		}.getOrElse(BoundingBox(OBoxOrABox.ABox(infiniteABox)))
-		Region(r1.population + r2.population, f(r1.label, r2.label), Some(boundingBox))
+	def union(b1: BoundingBox, b2: BoundingBox): Try[BoundingBox] = {
+		if (b1.oBoxOrABox != b2.oBoxOrABox)
+			Failure(new IllegalArgumentException("Mixed bounding box types not allowed"))
+		else
+			b1.oBoxOrABox match {
+				case BoundingBox.OBoxOrABox.ABox(abox1) =>
+					Success(BoundingBox(BoundingBox.OBoxOrABox.ABox(union(abox1, b2.oBoxOrABox.aBox.get))))
+				case BoundingBox.OBoxOrABox.OBox(obox1) =>
+					Success(BoundingBox(BoundingBox.OBoxOrABox.OBox(union(obox1, b2.oBoxOrABox.oBox.get))))
+				case _ =>
+					Failure(new NotImplementedError())
+			}
 	}
+
+	def union(r1: Region, r2: Region, f: (String, String) => String = (s1, s2) => s1.concat(s2)): Try[Region] = {
+		r1.boundingBox.zip(r2.boundingBox).map {
+			case (b1:BoundingBox, b2:BoundingBox) => union(b1, b2)
+		}.getOrElse(Success(BoundingBox(BoundingBox.OBoxOrABox.ABox(infiniteABox)))) match {
+			case Success(bbox) =>
+				Success(Region(r1.population + r2.population, f(r1.label, r2.label), Some(bbox)))
+			case Failure(f) =>
+				Failure(f)
+		}
+	}
+
+	def intersects(b1: ABox, b2: ABox): Boolean = {
+		val min1 = b1.min.getOrElse(XYZs.positiveInfinite)
+		val min2 = b2.min.getOrElse(XYZs.positiveInfinite)
+		val max1 = b1.max.getOrElse(XYZs.negativeInfinite)
+		val max2 = b2.max.getOrElse(XYZs.negativeInfinite)
+
+		for (i <- 0 to 2) {
+			if (max1(i) > min2(i) && min1(i) < max2(i))
+				return true
+		}
+		false
+	}
+
+	def intersects(b1: OBox, b2: OBox): Boolean = ???
+
+
 }

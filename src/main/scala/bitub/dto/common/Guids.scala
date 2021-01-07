@@ -27,7 +27,6 @@ object Guids {
 	object implicits {
 		import scala.language.implicitConversions
 
-		implicit def newRandomGuid(): Guid = Guids.newRandomGuid()
 		implicit def fromUUID(uuid: UUID): Guid = Guids.fromUUID(uuid)
 		implicit def toUUID(guid: Guid): UUID = Guids.toUUID(guid)
 	}
